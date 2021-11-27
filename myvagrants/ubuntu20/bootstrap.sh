@@ -52,6 +52,7 @@ install_openssh() {
 }
 
 install_tools() {
+    sudo apt install git 
     sudo apt install -y python-pip
     sudo apt install -y default-jre
         pip install kafka --user
@@ -70,12 +71,32 @@ setup_welcome_msg() {
     sudo ln -s /usr/games/cowsay /usr/local/bin/cowsay
 }
 
+install_nginx() {
+    sudo apt -y install nginx nginx-extras
+}
+
+install_tor_privoxy_haproxy() {
+    sudo apt -y install tor privoxy haproxy
+    echo "Tor, privoxy, and haproxy installed"
+}
+
+install_golang() {
+    wget -c https://go.dev/dl/go1.17.3.linux-amd64.tar.gz -O - | sudo tar -xz -C /usr/local
+    echo -e "export PATH=$PATH:/usr/local/go/bin" >> /home/vagrant/.profile
+    mkdir /home/vagrant/go
+    source ~/.profile
+    go version
+}
+
 main() {
     ensure_netplan_apply
     resolve_dns
     install_openssh
     setup_root_login
     setup_welcome_msg
+    install_nginx
+    install_tor_privoxy_haproxy
+    install_golang
 }
 
 main
